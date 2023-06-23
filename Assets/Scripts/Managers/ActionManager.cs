@@ -113,16 +113,16 @@ public class ActionManager : MonoBehaviour
             
             return;
         }
-
-        if (UnitManager.Instance.SelectedHero != null && action == Action.defend)
+        //Defend mechanics not completely functioning, maybe an additional line from baseunit is required for calculation?
+       // if (UnitManager.Instance.SelectedHero != null && action == Action.defend)
         {
-            if(tile.OccupiedUnit.Faction == Faction.Hero && tile.OccupiedUnit.turnDone == false)
+           // if(tile.OccupiedUnit.Faction == Faction.Hero && tile.OccupiedUnit.turnDone == false)
             {
-                _ = (BaseHero)tile.OccupiedUnit;
+               // _ = (BaseHero)tile.OccupiedUnit;
                 //Select for Defence
-                UnitManager.Instance.SetSelectedHero((BaseHero)tile.OccupiedUnit);
+                //UnitManager.Instance.SetSelectedHero((BaseHero)tile.OccupiedUnit);
                 
-                action = Action.defend;
+                //action = Action.defend;
 
 
             }

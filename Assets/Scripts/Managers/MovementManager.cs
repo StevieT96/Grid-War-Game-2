@@ -183,7 +183,7 @@ public class MovementManager : MonoBehaviour
 
             foreach (Tile tile in area.ToList())
             {
-                //BFS - Breadth First Search used again to check and clean tiles inRange after unit turn
+                //BFS - Breadth First Search used again to check and return tiles inRange after unit turn
                 Vector2 tilePos = tile.transform.position;
 
                 if (tile.Walkable == true || tilePos == pos && tile.isCheck == false)
