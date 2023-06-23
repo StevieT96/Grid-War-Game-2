@@ -56,6 +56,7 @@ public class MenuManager : MonoBehaviour
         selectedHeroDmg.GetComponentInChildren<Text>().text = hero.damage.ToString();
         selectedHeroDef.GetComponentInChildren<Text>().text = hero.defence.ToString();
         selectedHeroPanel.SetActive(true);
+
     }
     public void RestartGame()
     {
@@ -68,4 +69,9 @@ public class MenuManager : MonoBehaviour
         GameManager.Instance.ChangeState(GameState.EnemiesTurn);
         
     }
+    public void QuitGame()
+    {
+        Application.Quit();
+    }
+
 }
