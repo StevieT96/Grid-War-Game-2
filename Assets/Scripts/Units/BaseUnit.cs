@@ -41,15 +41,14 @@ public class BaseUnit : MonoBehaviour
 
     public void SetDamage(int damage)
     {
-        currentHealth -= damage;
+        currentHealth -= (damage - defence);
+            damage = Mathf.Clamp(damage, 0, int.MaxValue);
+ 
 
         if (currentHealth > maxHealth)
         {
             currentHealth = maxHealth;
-            {
-                if (defence > 0)
-                    currentHealth = defence + currentHealth;
-            }
+   
         }
 
         if (currentHealth <= 0)
@@ -75,9 +74,8 @@ public class BaseUnit : MonoBehaviour
     public void Attack(BaseUnit target)
     {
         target.SetDamage(damage);
+     
 
-        
-        
     }
 
     public void SetStats(ScriptableUnit data)

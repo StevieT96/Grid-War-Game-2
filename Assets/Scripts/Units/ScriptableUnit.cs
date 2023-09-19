@@ -8,11 +8,11 @@ public class ScriptableUnit : ScriptableObject
     public Faction Faction;
     public BaseUnit UnitPrefab;
 
-    public int maxHealth = 10;
+    public int maxHealth;
     public int speed;
     public int attackRange;
-    public int damage = 3;
-    public int defence = 1;
+    public int damage;
+    public int defence;
 
 }
 

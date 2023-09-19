@@ -106,6 +106,6 @@ MonoBehaviour:
   maxHealth: 10
   speed: 3
   attackRange: 1
-  damage: 3
+  damage: 4
   defence: 1
   turnDone: 0

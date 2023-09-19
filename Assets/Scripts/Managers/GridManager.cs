@@ -9,7 +9,7 @@ public class GridManager : MonoBehaviour {
     public static GridManager Instance;
     [SerializeField] private int _width, _height;
 
-    [SerializeField] private Tile _grassTile, _mountainTile;
+    [SerializeField] private Tile _grassTile, _mountainTile, _forestTile;
 
     [SerializeField] private Transform _cam;
 
@@ -22,10 +22,36 @@ public class GridManager : MonoBehaviour {
     public void GenerateGrid()
     {
         _tiles = new Dictionary<Vector2, Tile>();
+        int blocksPerBlock = 3;
+        int[] blockCounts = new int[100];
+        for (int i = 0;i<100;i++)
+        {
+            blockCounts[i] = 0;
+        }
+        int maxMountainsPerBlock = _height / 2;
+        Debug.Log(maxMountainsPerBlock);
         for (int x = 0; x < _width; x++)
         {
+            int blockNum = x / blocksPerBlock;
+            Debug.Log(blockNum);
             for (int y = 0; y < _height; y++) {
-                var randomTile = Random.Range(0, 6) == 3 ? _mountainTile : _grassTile;
+                /* Maintain a count of 3 columns (e.g. if X div 3 == 0, you're in the first block of 3 columns)
+                 * X div 3 (e.g. 4 div 3 = 1, 8 div 3 = 2
+                 */
+                var randomNum = Random.Range(0, 2);
+                var randomTile = randomNum == 1 ? _mountainTile : _grassTile;
+                
+
+                // If quota met, just use grass tiles
+                if (blockCounts[blockNum] >= maxMountainsPerBlock)
+                {
+                    Debug.Log("Too many mountain tiles in block: " + blockNum + ", block counts: " + blockCounts[blockNum] + ", max blocks: " + maxMountainsPerBlock);
+                    randomTile = _grassTile;
+                } else
+                {
+                    blockCounts[blockNum] = randomNum == 1 ? blockCounts[blockNum] + 1 : blockCounts[blockNum];
+                }
+
                 var spawnedTile = Instantiate(randomTile, new Vector3(x, y), Quaternion.identity, this.transform);
                 spawnedTile.name = $"Tile {x} {y}";
 

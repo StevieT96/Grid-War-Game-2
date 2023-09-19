@@ -8,10 +8,10 @@ public class MenuManager : MonoBehaviour
 {
     public static MenuManager Instance;
 
-    [SerializeField] private GameObject selectedHeroPanel, selectedHeroName, selectedHeroHP, selectedHeroMoveRange, selectedHeroDmg, selectedHeroDef;
+    [SerializeField] private GameObject selectedHeroPanel, selectedHeroName, selectedHeroHP, selectedHeroMoveRange, selectedHeroDmg, selectedHeroDefence;
     
 
-    [SerializeField] private GameObject tileUnitPanel, tileUnitName, tileUnitHP, TileUnitDmg, TileUnitDmgRange;
+    [SerializeField] private GameObject tileUnitPanel, tileUnitName, tileUnitHP, TileUnitDmg, TileUnitDmgRange, TileUnitDefence;
 
     [Space(10)]
     [SerializeField] private GameObject tilePanel;
@@ -40,6 +40,7 @@ public class MenuManager : MonoBehaviour
             tileUnitHP.GetComponentInChildren<Text>().text = tile.OccupiedUnit.currentHealth.ToString();
             TileUnitDmg.GetComponentInChildren<Text>().text = tile.OccupiedUnit.damage.ToString();
             TileUnitDmgRange.GetComponentInChildren<Text>().text = tile.OccupiedUnit.attackRange.ToString();
+            TileUnitDefence.GetComponentInChildren<Text>().text = tile.OccupiedUnit.defence.ToString();
             tileUnitPanel.SetActive(true);
         }
     }
@@ -54,7 +55,7 @@ public class MenuManager : MonoBehaviour
         selectedHeroHP.GetComponentInChildren<Text>().text = hero.currentHealth.ToString();
         selectedHeroMoveRange.GetComponentInChildren<Text>().text = hero.speed.ToString();
         selectedHeroDmg.GetComponentInChildren<Text>().text = hero.damage.ToString();
-        selectedHeroDef.GetComponentInChildren<Text>().text = hero.defence.ToString();
+        selectedHeroDefence.GetComponentInChildren<Text>().text = hero.defence.ToString();
         selectedHeroPanel.SetActive(true);
 
     }

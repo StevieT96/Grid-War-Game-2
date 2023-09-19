@@ -108,7 +108,7 @@ public class EnemyActionManager : MonoBehaviour
     
     public Tile MoveTowardsTile(Tile targetTile)
     {
-        List<Tile> tiles = MovementManager.Instance.ReturnMoveTiles(new Vector2(unit.transform.position.x, unit.transform.position.y), checkRange);
+      //  List<Tile> tiles = MovementManager.Instance.ReturnMoveTiles(new Vector2(unit.transform.position.x, unit.transform.position.y), checkRange);
         int moveCount = 0;
         Tile startingTile = GridManager.Instance.GetTileAtPosition(unit.transform.position);
         Tile tile = targetTile;
@@ -135,7 +135,7 @@ public class EnemyActionManager : MonoBehaviour
             if (tile.OccupiedUnit != null) break;
         }
 
-        tiles.Clear();
+      //  tiles.Clear();
         
 
         // check that unit didnt land on the target tile itself

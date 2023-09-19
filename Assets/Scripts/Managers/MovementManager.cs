@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using static UnityEditor.PlayerSettings;
 
 public class MovementManager : MonoBehaviour
 {
@@ -29,20 +30,96 @@ public class MovementManager : MonoBehaviour
 
     }
 
+  
+
+    public void AddTileToList(List<Tile> area, Tile tile, Vector2 tilePos, Vector2 nextPos, int moveCount) 
+    {
+        // add for directions
+        if (GridManager.Instance.GetTileAtPosition(nextPos) != null && GridManager.Instance.GetTileAtPosition(nextPos).isCheck == false)
+        {
+            var nextTile = GridManager.Instance.GetTileAtPosition(nextPos);
+            area.Add(nextTile);
+            nextTile.parent = tile;
+            if (nextTile.dist == -1) nextTile.dist = moveCount + 1;
+        }
+    }
+
     public void SetMovementTiles(Vector2 pos, int movement, Color color)
     {
         _ = GridManager.Instance._tiles;
         int moveCount = 0;
-        //select tiles in range
+        // Create an initial list for getting all the tiles in range, starting off the current tile you're on
         List<Tile> area = new()
         {
             GridManager.Instance.GetTileAtPosition(pos)
         };
 
+        // Within this loop, check all tiles and add them if in range
+        while (moveCount < movement)
+        {
+
+            // Loop through tiles in the area
+            foreach (Tile tile in area.ToList())
+            {
+                //movement Breadth First Search - widely checks all nodes on whether or not the tile is walkable or not
+                Vector2 tilePos = tile.transform.position;
+
+                if (tile.Walkable == true || tilePos == pos && tile.isCheck == false)
+                {
+
+                    // added for directions
+                    Vector2 right = new Vector2(tilePos.x + 1, tilePos.y);
+                    AddTileToList(area, tile, tilePos, right, moveCount);
+                    Vector2 left = new Vector2(tilePos.x - 1, tilePos.y);
+                    AddTileToList(area, tile, tilePos, left, moveCount);
+                    Vector2 up = new Vector2(tilePos.x, tilePos.y - 1);
+                    AddTileToList(area, tile, tilePos, up, moveCount);
+                    Vector2 down = new Vector2(tilePos.x, tilePos.y + 1);
+                    AddTileToList(area, tile, tilePos, down, moveCount);
+
+
+                    tile.isCheck = true;
+                }
+
+
+            }
+            moveCount++;
+        }
+        //makes tiles inRange true
+        foreach (Tile tile in area.ToList())
+        {
+            if (tile.Walkable == true)
+            {
+                tile.inRange = true;
+                tile.rangeHighlight.SetActive(true);
+                tile.rangeHighlight.GetComponent<SpriteRenderer>().color = color;
+
+
+                tile.isCheck = true;
+            }
+        }
+    }
+
+
+
+
+
+    /* Voided intial coding shown below, as the coding was improved into something more simple and less spaghetti as shown above
+    public void SetMovementTiles(Vector2 pos, int movement, Color color)
+    {
+        _ = GridManager.Instance._tiles;
+        int moveCount = 0;
+        // Create an initial list for getting all the tiles in range, starting off the current tile you're on
+        List<Tile> area = new()
+        {
+            GridManager.Instance.GetTileAtPosition(pos)
+        };
+
+        // Within this loop, check all tiles and add them if in range
         while ( moveCount < movement)
         {
             
-
+            // Loop through tiles in the area (is this just one tile?)
             foreach (Tile tile in area.ToList() )
             {
                 //movement Breadth First Search - widely checks all nodes on whether or not the tile is walkable or not
@@ -106,6 +183,7 @@ public class MovementManager : MonoBehaviour
             }
         }
     }
+    */
 
     public void CleanMovementTiles()
     {
@@ -167,6 +245,7 @@ public class MovementManager : MonoBehaviour
         //path.positionCount = 0;
     //}
 
+    
     public List<Tile> ReturnMoveTiles(Vector2 pos, int movement,bool includeUnits = false)
     {
         _ = GridManager.Instance._tiles;
@@ -189,7 +268,18 @@ public class MovementManager : MonoBehaviour
                 if (tile.Walkable == true || tilePos == pos && tile.isCheck == false)
                 {
 
-                    // added for directions
+                    // add for directions
+                    Vector2 right = new Vector2(tilePos.x + 1, tilePos.y);
+                    AddTileToList(area, tile, tilePos, right, moveCount);
+                    Vector2 left = new Vector2(tilePos.x - 1, tilePos.y);
+                    AddTileToList(area, tile, tilePos, left, moveCount);
+                    Vector2 up = new Vector2(tilePos.x, tilePos.y - 1);
+                    AddTileToList(area, tile, tilePos, up, moveCount);
+                    Vector2 down = new Vector2(tilePos.x, tilePos.y + 1);
+                    AddTileToList(area, tile, tilePos, down, moveCount);
+
+                    //AddTileToList()
+                    /*
                     if (GridManager.Instance.GetTileAtPosition(new Vector2(tilePos.x + 1, tilePos.y)) != null && GridManager.Instance.GetTileAtPosition(new Vector2(tilePos.x + 1, tilePos.y)).isCheck == false)
                     {
                         var nextTile = GridManager.Instance.GetTileAtPosition(new Vector2(tilePos.x + 1, tilePos.y));
@@ -197,6 +287,7 @@ public class MovementManager : MonoBehaviour
                         nextTile.parent = tile;
                         if (nextTile.dist == -1) nextTile.dist = moveCount + 1;
                     }
+                    
 
                     if (GridManager.Instance.GetTileAtPosition(new Vector2(tilePos.x - 1, tilePos.y)) != null && GridManager.Instance.GetTileAtPosition(new Vector2(tilePos.x - 1, tilePos.y)).isCheck == false)
                     {
@@ -221,7 +312,7 @@ public class MovementManager : MonoBehaviour
                         nextTile.parent = tile;
                         if (nextTile.dist == -1) nextTile.dist = moveCount + 1;
                     }
-
+                    */
 
                     tile.isCheck = true;
                 }
