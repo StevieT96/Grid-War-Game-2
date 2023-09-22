@@ -7,8 +7,8 @@ using UnityEngine;
 public class MovementManager : MonoBehaviour
 {
     public static MovementManager Instance;
-    
-    
+
+
     void Awake()
     {
         Instance = this;
@@ -17,8 +17,8 @@ public class MovementManager : MonoBehaviour
     public void SetAreaTiles(Vector2 pos, int movement, Color color)
     {
         Dictionary<Vector2, Tile> tiles = GridManager.Instance._tiles;
-        //selects the tiles inRange
-        List<Tile> area = tiles.Where(t => (Mathf.Abs(t.Key.x - pos.x) < movement && Mathf.Abs(t.Key.y - pos.y) < movement) ).ToDictionary(t => t.Key, t => t.Value).Values.ToList();
+        //select tiles in range
+        List<Tile> area = tiles.Where(t => (Mathf.Abs(t.Key.x - pos.x) < movement && Mathf.Abs(t.Key.y - pos.y) < movement)).ToDictionary(t => t.Key, t => t.Value).Values.ToList();
         //makes tiles inRange true
         foreach (Tile tile in area)
         {
@@ -29,104 +29,27 @@ public class MovementManager : MonoBehaviour
 
     }
 
-  
-
-    public void AddTileToList(List<Tile> area, Tile tile, Vector2 tilePos, Vector2 nextPos, int moveCount) 
-    {
-        // add for directions
-        if (GridManager.Instance.GetTileAtPosition(nextPos) != null && GridManager.Instance.GetTileAtPosition(nextPos).isCheck == false)
-        {
-            var nextTile = GridManager.Instance.GetTileAtPosition(nextPos);
-            area.Add(nextTile);
-            nextTile.parent = tile;
-            if (nextTile.dist == -1) nextTile.dist = moveCount + 1;
-        }
-    }
-
     public void SetMovementTiles(Vector2 pos, int movement, Color color)
     {
-        _ = GridManager.Instance._tiles;
-        int moveCount = 0;
-        // Create an initial list for getting all the tiles in range, starting off the current tile you're on
-        List<Tile> area = new()
-        {
-            GridManager.Instance.GetTileAtPosition(pos)
-        };
 
-        // Within this loop, check all tiles and add them if in range
+        Dictionary<Vector2, Tile> tiles = GridManager.Instance._tiles;
+        int moveCount = 0;
+        //select tiles in range
+        List<Tile> area = new List<Tile>();
+        area.Add(GridManager.Instance.GetTileAtPosition(pos));
+
         while (moveCount < movement)
         {
 
-            // Loop through tiles in the area
+
             foreach (Tile tile in area.ToList())
             {
-                //movement Breadth First Search - widely checks all nodes on whether or not the tile is walkable or not
+                //movement BFS
                 Vector2 tilePos = tile.transform.position;
 
                 if (tile.Walkable == true || tilePos == pos && tile.isCheck == false)
                 {
 
-                    // added for directions
-                    Vector2 right = new Vector2(tilePos.x + 1, tilePos.y);
-                    AddTileToList(area, tile, tilePos, right, moveCount);
-                    Vector2 left = new Vector2(tilePos.x - 1, tilePos.y);
-                    AddTileToList(area, tile, tilePos, left, moveCount);
-                    Vector2 up = new Vector2(tilePos.x, tilePos.y - 1);
-                    AddTileToList(area, tile, tilePos, up, moveCount);
-                    Vector2 down = new Vector2(tilePos.x, tilePos.y + 1);
-                    AddTileToList(area, tile, tilePos, down, moveCount);
-
-
-                    tile.isCheck = true;
-                }
-
-
-            }
-            moveCount++;
-        }
-        //makes tiles inRange true
-        foreach (Tile tile in area.ToList())
-        {
-            if (tile.Walkable == true)
-            {
-                tile.inRange = true;
-                tile.rangeHighlight.SetActive(true);
-                tile.rangeHighlight.GetComponent<SpriteRenderer>().color = color;
-
-
-                tile.isCheck = true;
-            }
-        }
-    }
-
-
-
-
-
-    /* Voided intial coding shown below, as the coding was improved into something more simple and less spaghetti as shown above
-    public void SetMovementTiles(Vector2 pos, int movement, Color color)
-    {
-        _ = GridManager.Instance._tiles;
-        int moveCount = 0;
-        // Create an initial list for getting all the tiles in range, starting off the current tile you're on
-        List<Tile> area = new()
-        {
-            GridManager.Instance.GetTileAtPosition(pos)
-        };
-
-        // Within this loop, check all tiles and add them if in range
-        while ( moveCount < movement)
-        {
-            
-            // Loop through tiles in the area (is this just one tile?)
-            foreach (Tile tile in area.ToList() )
-            {
-                //movement Breadth First Search - widely checks all nodes on whether or not the tile is walkable or not
-                Vector2 tilePos = tile.transform.position;
-                
-                if (tile.Walkable == true || tilePos == pos && tile.isCheck == false)
-                {
-                    
                     // add for directions
                     if (GridManager.Instance.GetTileAtPosition(new Vector2(tilePos.x + 1, tilePos.y)) != null && GridManager.Instance.GetTileAtPosition(new Vector2(tilePos.x + 1, tilePos.y)).isCheck == false)
                     {
@@ -152,19 +75,19 @@ public class MovementManager : MonoBehaviour
                         if (nextTile.dist == -1) nextTile.dist = moveCount + 1;
                     }
 
-                    if (GridManager.Instance.GetTileAtPosition(new Vector2(tilePos.x + 1, tilePos.y -1)) != null && GridManager.Instance.GetTileAtPosition(new Vector2(tilePos.x, tilePos.y -1)).isCheck == false)
+                    if (GridManager.Instance.GetTileAtPosition(new Vector2(tilePos.x + 1, tilePos.y - 1)) != null && GridManager.Instance.GetTileAtPosition(new Vector2(tilePos.x, tilePos.y - 1)).isCheck == false)
                     {
                         var nextTile = GridManager.Instance.GetTileAtPosition(new Vector2(tilePos.x, tilePos.y - 1));
                         area.Add(nextTile);
                         nextTile.parent = tile;
-                        if (nextTile.dist == -1) nextTile.dist = moveCount +1;
+                        if (nextTile.dist == -1) nextTile.dist = moveCount + 1;
                     }
 
-                    
+
                     tile.isCheck = true;
                 }
-            
-  
+
+
             }
             moveCount++;
         }
@@ -177,12 +100,11 @@ public class MovementManager : MonoBehaviour
                 tile.rangeHighlight.SetActive(true);
                 tile.rangeHighlight.GetComponent<SpriteRenderer>().color = color;
 
-                
+
                 tile.isCheck = true;
             }
         }
     }
-    */
 
     public void CleanMovementTiles()
     {
@@ -217,43 +139,39 @@ public class MovementManager : MonoBehaviour
         }
         return false;
     }
-    //Converted DrawPath and Clean Path code lines to comment as pathline renderer is broken for every new unit that's made through the game - low priority fix
 
-    //public void DrawPath( Tile target)
-    //{
-        //LineRenderer path = UnitManager.Instance.SelectedHero.path;
-        //path.positionCount = 1;
-        //path.SetPosition(0, target.transform.position);
-        //Tile tile = target;
- 
-            //for (int i = 0; i < target.dist; i++)
-           // {
-
-                //path.positionCount++;
-                //tile = tile.parent;
-                //path.SetPosition(i +1 , tile.transform.position);
-
-
-
-            //}
-
-    //}
-    //public void CleanPath()
-    //{
-       // LineRenderer path = UnitManager.Instance.SelectedHero.path;
-        //path.positionCount = 0;
-    //}
-
-    
-    public List<Tile> ReturnMoveTiles(Vector2 pos, int movement,bool includeUnits = false)
+    public void DrawPath(Tile target)
     {
-        _ = GridManager.Instance._tiles;
-        int moveCount = 0;
-        //selects tiles in range
-        List<Tile> area = new()
+        LineRenderer path = UnitManager.Instance.SelectedHero.path;
+        path.positionCount = 1;
+        path.SetPosition(0, target.transform.position);
+        Tile tile = target;
+
+        for (int i = 0; i < target.dist; i++)
         {
-            GridManager.Instance.GetTileAtPosition(pos)
-        };
+
+            path.positionCount++;
+            tile = tile.parent;
+            path.SetPosition(i + 1, tile.transform.position);
+
+
+
+        }
+
+    }
+    public void CleanPath()
+    {
+        LineRenderer path = UnitManager.Instance.SelectedHero.path;
+        path.positionCount = 0;
+    }
+
+    public List<Tile> ReturnMoveTiles(Vector2 pos, int movement, bool includeUnits = false)
+    {
+        Dictionary<Vector2, Tile> tiles = GridManager.Instance._tiles;
+        int moveCount = 0;
+        //select tiles in range
+        List<Tile> area = new List<Tile>();
+        area.Add(GridManager.Instance.GetTileAtPosition(pos));
 
         while (moveCount < movement)
         {
@@ -261,24 +179,13 @@ public class MovementManager : MonoBehaviour
 
             foreach (Tile tile in area.ToList())
             {
-                //BFS - Breadth First Search used again to check and return tiles inRange after unit turn
+                //movement BFS
                 Vector2 tilePos = tile.transform.position;
 
                 if (tile.Walkable == true || tilePos == pos && tile.isCheck == false)
                 {
 
                     // add for directions
-                    Vector2 right = new Vector2(tilePos.x + 1, tilePos.y);
-                    AddTileToList(area, tile, tilePos, right, moveCount);
-                    Vector2 left = new Vector2(tilePos.x - 1, tilePos.y);
-                    AddTileToList(area, tile, tilePos, left, moveCount);
-                    Vector2 up = new Vector2(tilePos.x, tilePos.y - 1);
-                    AddTileToList(area, tile, tilePos, up, moveCount);
-                    Vector2 down = new Vector2(tilePos.x, tilePos.y + 1);
-                    AddTileToList(area, tile, tilePos, down, moveCount);
-
-                    //AddTileToList()
-                    /*
                     if (GridManager.Instance.GetTileAtPosition(new Vector2(tilePos.x + 1, tilePos.y)) != null && GridManager.Instance.GetTileAtPosition(new Vector2(tilePos.x + 1, tilePos.y)).isCheck == false)
                     {
                         var nextTile = GridManager.Instance.GetTileAtPosition(new Vector2(tilePos.x + 1, tilePos.y));
@@ -286,7 +193,6 @@ public class MovementManager : MonoBehaviour
                         nextTile.parent = tile;
                         if (nextTile.dist == -1) nextTile.dist = moveCount + 1;
                     }
-                    
 
                     if (GridManager.Instance.GetTileAtPosition(new Vector2(tilePos.x - 1, tilePos.y)) != null && GridManager.Instance.GetTileAtPosition(new Vector2(tilePos.x - 1, tilePos.y)).isCheck == false)
                     {
@@ -311,7 +217,7 @@ public class MovementManager : MonoBehaviour
                         nextTile.parent = tile;
                         if (nextTile.dist == -1) nextTile.dist = moveCount + 1;
                     }
-                    */
+
 
                     tile.isCheck = true;
                 }
@@ -324,7 +230,7 @@ public class MovementManager : MonoBehaviour
         {
             return area;
         }
-        List<Tile> finalArea = new();
+        List<Tile> finalArea = new List<Tile>();
         foreach (Tile tile in area.ToList())
         {
             if (tile.Walkable == true)
@@ -334,7 +240,7 @@ public class MovementManager : MonoBehaviour
         }
         return finalArea;
     }
-    public List<Tile> ReturnAreaTiles(Vector2 pos, int range)   
+    public List<Tile> ReturnAreaTiles(Vector2 pos, int range)
     {
         Dictionary<Vector2, Tile> tiles = GridManager.Instance._tiles;
         //select tiles in range

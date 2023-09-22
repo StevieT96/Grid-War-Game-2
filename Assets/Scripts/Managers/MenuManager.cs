@@ -6,9 +6,9 @@ using UnityEngine.SceneManagement;
 
 public class MenuManager : MonoBehaviour 
 {
-    public static MenuManager Instance;
+    public static MenuManager BaseUnit, Instance;
 
-    [SerializeField] private GameObject selectedHeroPanel, selectedHeroName, selectedHeroHP, selectedHeroMoveRange, selectedHeroDmg, selectedHeroDefence;
+    [SerializeField] private GameObject selectedHeroPanel, selectedHeroName, selectedHeroHP, selectedHeroMoveRange, selectedHeroDmg, selectedHeroDefence, ShieldBuff;
     
 
     [SerializeField] private GameObject tileUnitPanel, tileUnitName, tileUnitHP, TileUnitDmg, TileUnitDmgRange, TileUnitDefence;
@@ -20,6 +20,7 @@ public class MenuManager : MonoBehaviour
         selectedHeroPanel.SetActive(false);
         tileUnitPanel.SetActive(false);
         tilePanel.SetActive(false);
+        
     }
 
     public void ShowTileInfo(Tile tile) {
@@ -65,10 +66,12 @@ public class MenuManager : MonoBehaviour
 
     }
 
-    public void TurnPass()
+    public void TurnPass(GameObject EndTurn)
+
+        
     {
         GameManager.Instance.ChangeState(GameState.EnemiesTurn);
-        
+       
     }
     public void QuitGame()
     {

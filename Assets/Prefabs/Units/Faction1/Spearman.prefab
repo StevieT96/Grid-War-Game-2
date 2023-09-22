@@ -235,10 +235,10 @@ MonoBehaviour:
   OccupiedTile: {fileID: 0}
   currentHealth: 0
   maxHealth: 10
-  speed: 1
+  speed: 3
   attackRange: 2
   damage: 3
-  defence: 2
+  defence: 1
   turnDone: 0
 --- !u!1 &7749099623515246114
 GameObject:

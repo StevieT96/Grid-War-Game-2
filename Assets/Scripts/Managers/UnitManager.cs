@@ -4,7 +4,7 @@ using System.Linq;
 using UnityEditor;
 using UnityEngine;
 
-public class UnitManager : MonoBehaviour 
+public class UnitManager : MonoBehaviour
 {
     public static UnitManager Instance;
 
@@ -14,7 +14,7 @@ public class UnitManager : MonoBehaviour
 
     public BaseHero SelectedHero;
 
-    void Awake() 
+    void Awake()
     {
         Instance = this;
 
@@ -22,23 +22,21 @@ public class UnitManager : MonoBehaviour
 
     }
 
-    public void SpawnHeroes() 
+    public void SpawnHeroes()
     {
         var heroCount = 5;
 
-        for (int i = 0; i < heroCount; i++) 
+        for (int i = 0; i < heroCount; i++)
         {
-            ScriptableUnit randomUnit= GetRandomUnit(Faction.Hero);
+            ScriptableUnit randomUnit = GetRandomUnit(Faction.Hero);
             var randomPrefab = randomUnit.UnitPrefab;
-            
+
             var spawnedHero = Instantiate(randomPrefab);
 
             playerUnits.Add(spawnedHero.GetComponent<BaseUnit>());
 
             var randomSpawnTile = GridManager.Instance.GetHeroSpawnTile();
             spawnedHero.GetComponent<BaseUnit>().SetStats(randomUnit);
-
-            
 
             randomSpawnTile.SetUnit(spawnedHero);
         }
@@ -48,7 +46,7 @@ public class UnitManager : MonoBehaviour
 
     public void SpawnEnemies()
     {
-        var enemyCount = 7;
+        var enemyCount = 4;
 
         for (int i = 0; i < enemyCount; i++)
         {
@@ -66,12 +64,12 @@ public class UnitManager : MonoBehaviour
         GameManager.Instance.ChangeState(GameState.HeroesTurn);
     }
 
-    private ScriptableUnit GetRandomUnit(Faction faction)  
+    private ScriptableUnit GetRandomUnit(Faction faction)
     {
         return _units.Where(u => u.Faction == faction).OrderBy(o => Random.value).First();
     }
 
-    public void SetSelectedHero(BaseHero hero) 
+    public void SetSelectedHero(BaseHero hero)
     {
         SelectedHero = hero;
         MenuManager.Instance.ShowSelectedHero(hero);
@@ -79,10 +77,10 @@ public class UnitManager : MonoBehaviour
 
     public void PlayerTurn()
     {
-        foreach(BaseHero hero in playerUnits)
+        foreach (BaseHero hero in playerUnits)
         {
             hero.ResetAction();
         }
-        
+
     }
 }

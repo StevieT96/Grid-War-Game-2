@@ -36,7 +36,7 @@ public class GameManager : MonoBehaviour
                 UnitManager.Instance.PlayerTurn();
                 break;
             case GameState.EnemiesTurn:
-                EnemyManager.Instance.EnemyTurn();
+                _ = EnemyManager.Instance.EnemyTurn();
                 break;
      
 

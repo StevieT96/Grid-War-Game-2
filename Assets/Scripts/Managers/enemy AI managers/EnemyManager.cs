@@ -34,17 +34,17 @@ public class EnemyManager : MonoBehaviour
 
         List<BaseUnit> enemies = UnitManager.Instance.enemyUnits;
 
-            foreach (BaseUnit enemy in enemies)
-            {
-           
-                
+        foreach (BaseUnit enemy in enemies)
+        {
 
-                await EnemyActionManager.Instance.EnemyAction(enemy);
 
-            }
+
+            await EnemyActionManager.Instance.EnemyAction(enemy);
+
+        }
     }
 
-         
+
 }
 
 
