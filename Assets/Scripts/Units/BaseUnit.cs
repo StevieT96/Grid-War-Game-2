@@ -8,7 +8,7 @@ public class BaseUnit : MonoBehaviour
 {
     public string UnitName;
     public Faction Faction;
-    public GameObject highlight;
+    public GameObject highlight, ShieldBuff;
     public LineRenderer path;
     MenuManager EndTurn;
 
@@ -26,17 +26,44 @@ public class BaseUnit : MonoBehaviour
 
     [Space(10)]
     public bool turnDone = false;
-   
 
     private void Awake()
     {
         currentHealth = maxHealth;
     }
+
+    private bool defenceBuffApplied = false;
+
+    // Property to access the defense buff status
+    public bool DefenceBuffApplied
+    {
+        get { return defenceBuffApplied; }
+        set { defenceBuffApplied = value; }
+    }
+
+    private bool hasMoved = false;
+    public void ApplyDefenseBuff()
+    {
+        if (!hasMoved)
+        {
+            // Increase defense by 1
+            defence += 1;
+
+        }
+    }
+
     public void HasMoved()
     {
-        highlight.SetActive(true);
+
+        hasMoved = true;
+        highlight.SetActive(false);
         turnDone = true;
-       
+
+    }
+    public void RemoveDefenceBuff()
+    {
+        // Reset defense to its original value
+        defence -= 1;
 
     }
     public void ResetAction()
@@ -82,24 +109,7 @@ public class BaseUnit : MonoBehaviour
      
 
     }
-    public void EndDefence(bool HasMoved)
-    {
-        {
-            GameManager.Instance.ChangeState(GameState.EnemiesTurn);
-            if (HasMoved == false)
-            {
-                defence = defence + 1;
-            }
-            else if (HasMoved == true)
-            {
-                defence = 0;
-            }
-        }
-    
-        
 
-
-    }
     public void SetStats(ScriptableUnit data)
     {
         maxHealth = data.maxHealth;

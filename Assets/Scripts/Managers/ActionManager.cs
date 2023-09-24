@@ -5,18 +5,25 @@ using UnityEngine;
 public class ActionManager : MonoBehaviour
 {
     public static ActionManager Instance;
-    [HideInInspector] public enum Action { select, move, attack };
+    [HideInInspector] public enum Action { select, move, attack, defend};
     [HideInInspector] public Action action;
 
     public Color moveColor;
     public Color attackColor;
-    public GameObject ShieldBuff;
+    private BaseHero selectedHero;
     void Awake()
     {
         Instance = this;
         action = Action.select;
     }
 
+    public void RemoveDefenceBuff(BaseHero hero)
+    {
+        if (hero.DefenceBuffApplied)
+        {
+            hero.RemoveDefenceBuff();
+        }
+    }
     public async void MouseDown(Tile tile)
     {
         if (GameManager.Instance.gameState != GameState.HeroesTurn) return;
@@ -63,6 +70,11 @@ public class ActionManager : MonoBehaviour
 
             if (tile.Walkable == true && tile.inRange == true)
             {
+                // Check if the selected hero has the defense buff applied and remove it if necessary
+                if (selectedHero.DefenceBuffApplied)
+                {
+                    RemoveDefenceBuff(selectedHero);
+                }
                 //implement animation
                 await MoveAnimationManager.Instance.MoveInPath(selectedHero, tile);
                 // !!! tile.SetUnit(UnitManager.Instance.SelectedHero);
@@ -97,9 +109,17 @@ public class ActionManager : MonoBehaviour
             if (tile.OccupiedUnit.Faction == Faction.Hero && tile.OccupiedUnit.turnDone == false)
             {
 
-
-
                 BaseHero selectedHero = (BaseHero)tile.OccupiedUnit;
+
+                if (!selectedHero.DefenceBuffApplied)
+                {
+                    // Apply the defense buff and symbol when selecting the hero
+                    selectedHero.ApplyDefenseBuff();
+
+                    // Mark that the defense buff has been applied
+                    selectedHero.DefenceBuffApplied = true;
+                }
+
                 // select self
                 UnitManager.Instance.SetSelectedHero((BaseHero)tile.OccupiedUnit);
                 //MOVEMENT RANGE
@@ -111,9 +131,5 @@ public class ActionManager : MonoBehaviour
 
             return;
         }
-
-
-
-
     }
 }

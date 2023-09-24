@@ -325,4 +325,5 @@ MonoBehaviour:
   attackRange: 3
   damage: 2
   defence: 1
+  BuffSymbol: 
   turnDone: 0
